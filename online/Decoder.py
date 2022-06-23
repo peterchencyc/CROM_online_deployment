@@ -8,15 +8,17 @@ class Decoder(object):
         network.eval()
         for param in network.parameters():
             param.requires_grad = False
-        netfuncgrad.eval()
-        for param in netfuncgrad.parameters():
-            param.requires_grad = False
+        if netfuncgrad is not None:
+            netfuncgrad.eval()
+            for param in netfuncgrad.parameters():
+                param.requires_grad = False
         self.network = network
         self.md = md
         self.netfuncgrad = netfuncgrad
     
     def forward(self, x):
-        with torch.inference_mode():
+        #with torch.inference_mode():
+        with torch.no_grad():
             return self.network(x)
 
     def getPartGradx(self, x, part_dim, which):
