@@ -4,7 +4,7 @@ import torch
 from Encoder import *
 from Decoder import *
 from NonlinearSolver import *
-# from Experiments.ElasticityFem import *
+from Experiments.ElasticityFem import *
 from Experiments.DiffuseImage import *
 from Experiments.Diffusion import *
 from util.IOHelper import *
