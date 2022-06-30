@@ -22,7 +22,7 @@ class NonlinearSolver():
             loss = self.computeLoss(r)
             return loss, r
 
-    def solve(self, xhat, q_target, sample_point, step_size = 1, max_iters = 5):
+    def solve(self, xhat, q_target, sample_point, step_size = 1, max_iters = 5, print_info=True):
         xhat_new = xhat.detach().clone()
         xhat = xhat.detach().clone()
         xhat = xhat - torch.ones_like(xhat) # dummy 1
@@ -77,7 +77,8 @@ class NonlinearSolver():
         
         xhat = xhat_new.detach().clone()
         loss, r = self.computeLossAndR(xhat, q_target, sample_point)
-
-        print('GN, steps={steps}, loss={loss}'.format(steps=steps, loss=loss.item()))
+        
+        if print_info:
+            print('GN, steps={steps}, loss={loss}'.format(steps=steps, loss=loss.item()))
 
         return xhat

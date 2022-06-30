@@ -31,11 +31,11 @@ parser.add_argument('-ini_cond', help='initila condition',
                     type=str, nargs=1, required=False)
 parser.add_argument('-f_path', help='Speed for diffusion',
                     type=str, nargs=1, required=False)
-parser.add_argument('-proj_type', help='config path',
+parser.add_argument('-proj_type', help='projection type',
                     type=str, nargs='*', required=True)
-parser.add_argument('-proj_steps', help='config path',
+parser.add_argument('-proj_steps', help='peojection type by steps',
                     type=int, nargs='*', required=False)
-parser.add_argument('-nonlinear_initial_guess', help='config path',
+parser.add_argument('-nonlinear_initial_guess', help='nonlinear_initial_guess',
                     type=str, nargs='*', required=False)
 parser.add_argument('-diff_threshold', help='',
                     type=float, nargs=1, required=False)
