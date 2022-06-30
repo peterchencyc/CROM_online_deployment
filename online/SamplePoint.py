@@ -58,4 +58,14 @@ class SamplePoint(object):
             else:
                 self.indices = np.arange(self.problem.x.shape[1])
         
+        elif self.problem.__class__.__name__ == 'Diffusion':
+            if sample_style == 'random':
+                self.indices = np.random.choice(np.arange(self.problem.x.shape[1]), num_sample)
+            elif sample_style == 'optimal':
+                self.indices = np.asarray([51, 205, 315, 261, 214, 144, 356, 267, 115, 271, 244, 309, 62, 364, 412, 467, 249, 403, 175, 328, 105, 354])
+            elif sample_style == 'uniform':
+                self.indices = np.append(12+np.arange(20)*25, np.asarray([0,500]))
+            else:
+                self.indices = np.arange(self.problem.x.shape[1])
+        
         

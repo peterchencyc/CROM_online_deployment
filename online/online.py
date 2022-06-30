@@ -6,6 +6,7 @@ from Decoder import *
 from NonlinearSolver import *
 # from Experiments.ElasticityFem import *
 from Experiments.DiffuseImage import *
+from Experiments.Diffusion import *
 from util.IOHelper import *
 from ProjTypeScheduler import *
 import os
@@ -27,6 +28,8 @@ parser.add_argument('-exp', help='output path',
 parser.add_argument('-config', help='config path',
                     type=str, nargs=1, required=False)
 parser.add_argument('-ini_cond', help='initila condition',
+                    type=str, nargs=1, required=False)
+parser.add_argument('-f_path', help='Speed for diffusion',
                     type=str, nargs=1, required=False)
 parser.add_argument('-proj_type', help='config path',
                     type=str, nargs='*', required=True)
@@ -85,6 +88,8 @@ if args.config:
     config = args.config[0]
 if args.ini_cond:
     ini_cond = args.ini_cond[0]
+if args.f_path:
+    f_path = args.f_path[0]
 
 dis_or_pos = 'pos' if not args.dis_or_pos else args.dis_or_pos[0]
 proj_type_list = args.proj_type
@@ -122,7 +127,7 @@ elif exp == 'elasticity_fem':
 output = os.path.join(output,os.path.basename(os.path.dirname(md)), proj_type_list[0], device_str, sample_str, os.path.basename(os.path.dirname(config)),"h5_f_{:010d}.h5")
 
 if exp == 'diffusion':
-    problem = Diffusion(config, device)
+    problem = Diffusion(config, f_path, ini_cond, device)
 elif exp == 'diffuse_image':
     problem = DiffuseImage(config, ini_cond, device)
 elif exp == 'elasticity_fem':
@@ -153,11 +158,15 @@ q0_gt = problem.getPhysicalInitialCondition()
 xhat = encoder.forward(q0_gt)
 q0_gt = q0_gt.view(-1, q0_gt.size(2))
 
+
 sample_point = SamplePoint(problem)
 if problem.__class__.__name__ == 'ElasticityFem':
     sample_style = 'random'
     sample_point.initialize(sample_style, -1, -1, decoder, xhat, torch.zeros_like(xhat))
 elif problem.__class__.__name__ == 'DiffuseImage':
+    sample_style = 'full'
+    sample_point.initialize_diffusion(sample_style, num_sample, decoder, xhat)
+elif problem.__class__.__name__ == 'Diffusion':
     sample_style = 'full'
     sample_point.initialize_diffusion(sample_style, num_sample, decoder, xhat)
 xhat = nonlinear_solver.solve(xhat, q0_gt, sample_point, 1, 20) # effectively serves as warm start for the rest of the gpu operations
@@ -179,6 +188,9 @@ if problem.__class__.__name__ == 'ElasticityFem':
     sample_point = SamplePoint(problem)
     sample_point.initialize(sample_style, num_sample_interior, num_sample_bdry, decoder, xhat, torch.zeros_like(xhat))
 elif problem.__class__.__name__ == 'DiffuseImage':
+    sample_point = SamplePoint(problem)
+    sample_point.initialize_diffusion(sample_style, num_sample, decoder, xhat)
+elif problem.__class__.__name__ == 'Diffusion':
     sample_point = SamplePoint(problem)
     sample_point.initialize_diffusion(sample_style, num_sample, decoder, xhat)
 
@@ -212,7 +224,9 @@ for step in range(1, problem.Nstep+1):
         proj_type, nonlinear_initial_guess = proj_type_scheduler.getProjType(step)
     elif problem.__class__.__name__ == 'DiffuseImage':
         proj_type = proj_type_list[0]
-        
+    elif problem.__class__.__name__ == 'Diffusion':
+        proj_type = proj_type_list[0]
+    
     with timer.child('Residual'):
         res = problem.getResidualSample(xhat, decoder, sample_point, step)
     
