@@ -69,8 +69,6 @@ parser.add_argument('-num_sample_interior', help='',
                     type=int, nargs=1, required=False)
 parser.add_argument('-num_sample_bdry', help='',
                     type=int, nargs=1, required=False)
-parser.add_argument('-num_sample', help='',
-                    type=int, nargs=1, required=False)
 parser.add_argument('-we', help='write_every',
                     type=int, nargs=1, required=False)
 parser.add_argument('-write_sample', help='',
@@ -112,14 +110,13 @@ device = torch.device(device_str)
 
 num_sample_interior = -1 if not args.num_sample_interior else args.num_sample_interior[0]
 num_sample_bdry = -1 if not args.num_sample_bdry else args.num_sample_bdry[0]
-num_sample = -1 if not args.num_sample else args.num_sample[0]
 write_every = 1 if not args.we else args.we[0]
 num_cpu_thread = None if not args.num_cpu_thread else args.num_cpu_thread[0]
 
 if exp == 'diffusion':
-    sample_str = 'sample_{num}'.format(num = num_sample)
+    sample_str = 'sample_{num}'.format(num = num_sample_interior)
 elif exp == 'diffuse_image':
-    sample_str = 'sample_{num}'.format(num = num_sample)
+    sample_str = 'sample_{num}'.format(num = num_sample_interior)
 elif exp == 'elasticity_fem':
     sample_str = 'sample-interior_{interior}_bdry_{bdry}'.format(interior = num_sample_interior, bdry = num_sample_bdry)
 
@@ -160,15 +157,9 @@ q0_gt = q0_gt.view(-1, q0_gt.size(2))
 
 
 sample_point = SamplePoint(problem)
-if problem.__class__.__name__ == 'ElasticityFem':
-    sample_style = 'random'
-    sample_point.initialize(sample_style, -1, -1, decoder, xhat, torch.zeros_like(xhat))
-elif problem.__class__.__name__ == 'DiffuseImage':
-    sample_style = 'full'
-    sample_point.initialize_diffusion(sample_style, num_sample, decoder, xhat)
-elif problem.__class__.__name__ == 'Diffusion':
-    sample_style = 'full'
-    sample_point.initialize_diffusion(sample_style, num_sample, decoder, xhat)
+sample_style = 'random'
+sample_point.initialize(sample_style, num_sample_interior, num_sample_bdry, decoder, xhat, torch.zeros_like(xhat))
+
 xhat = nonlinear_solver.solve(xhat, q0_gt, sample_point, 1, 20) # effectively serves as warm start for the rest of the gpu operations
 print('initial xhat: ', xhat)
 problem.updateState(xhat, decoder)
@@ -185,14 +176,10 @@ if args.vis_mesh_file: problem.vis_mesh_file = args.vis_mesh_file[0]
 
 if problem.__class__.__name__ == 'ElasticityFem':
     problem.initialSetup(xhat, decoder)
-    sample_point = SamplePoint(problem)
-    sample_point.initialize(sample_style, num_sample_interior, num_sample_bdry, decoder, xhat, torch.zeros_like(xhat))
-elif problem.__class__.__name__ == 'DiffuseImage':
-    sample_point = SamplePoint(problem)
-    sample_point.initialize_diffusion(sample_style, num_sample, decoder, xhat)
-elif problem.__class__.__name__ == 'Diffusion':
-    sample_point = SamplePoint(problem)
-    sample_point.initialize_diffusion(sample_style, num_sample, decoder, xhat)
+
+sample_point = SamplePoint(problem)
+sample_point.initialize(sample_style, num_sample_interior, num_sample_bdry, decoder, xhat, torch.zeros_like(xhat))
+
 
 # warm start
 num_wm = 100

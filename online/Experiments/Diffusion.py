@@ -86,22 +86,6 @@ class Diffusion(Experiment):
                 hessian_part[i] = 0
         return hessian_part
     
-    def getResidualFD(self, xhat, decoder):
-        lbllength = xhat.size(2)
-        xhat_all = xhat.expand(xhat.size(0), self.x.size(1), xhat.size(2))
-        x = torch.cat((xhat_all, self.x), 2)
-        x = x.view(x.size(0)*x.size(1), x.size(2))
-        q = decoder.forward(x)
-        a = q[0:q.size(0)-2]
-        b = q[1:q.size(0)-1]
-        c = q[2:q.size(0)]
-        hessian = (a - 2*b + c)/self.dx/self.dx
-        bc_l = torch.tensor([[0]]).cuda()
-        bc_r = bc_l
-        hessian = torch.cat([bc_l, hessian, bc_r], 0)
-        hessian *= self.alpha
-        return hessian
-    
     def getJacobian(self, xhat, decoder, index):
         lbllength = xhat.size(2)
         xhat_all = xhat.expand(xhat.size(0), len(index), xhat.size(2))

@@ -98,34 +98,7 @@ class DiffuseImage(Experiment):
         hessian_part *= self.gamma[index]
 
         return hessian_part
-    
-    def getResidualFD(self, xhat, decoder):
-        q = self.updateState(xhat, decoder)
-        q_backup = q.view(q.size(1), q.size(2))
-        q = q.view(self.xdim, self.ydim)
-
-        deltas = [torch.zeros_like(q) for _ in range(q.dim())]
-        # calculate the diffs
-        for i in range(q.dim()):
-            slicer = [slice(None, -1) if j == i else slice(None) for j in range(q.dim())]
-            diff_local = torch.diff(q, axis=i)
-            deltas[i][tuple(slicer)] = diff_local
-
-        voxelspacing = tuple([1.] * q.dim())
-
-        # multiply c
-        matrices = [delta for delta, spacing in zip(deltas, voxelspacing)]
-
-        # second derivative
-        for i in range(q.dim()):
-            slicer = [slice(1, None) if j == i else slice(None) for j in range(q.dim())]
-            matrices[i][tuple(slicer)] = torch.diff(matrices[i], axis=i)
-
-        matrices = matrices[0] + matrices[1] # 2d image
-        matrices = matrices.view_as(q_backup)
-        return matrices
-
-        
+            
     
     def getJacobian(self, xhat, decoder, index=None):
         if index is None:

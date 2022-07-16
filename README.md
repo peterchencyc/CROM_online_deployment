@@ -26,6 +26,15 @@ pip install -r requirements.txt
 ```
 
 ## Execute
+### Execute Diffusion
+```
+python3 online/execute_diffusion.py -device [device]
+```
+### Execute Diffuse Image
+```
+python3 online/execute_diffuseimage.py -device [device]
+```
+### Execute Elasticity
 ```
 python3 online/execute_online.py -device [device]
 ```

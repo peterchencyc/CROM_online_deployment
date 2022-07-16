@@ -118,10 +118,7 @@ def one_sim(st, gamma_path, sample_point):
                     xhat = nonlinear_solver.solve(xhat_initial, q_target, sample_point, step_size = 1, max_iters = 10, print_info = False)
                 with timer.child('Projection').child('vhat update'):
                     vhat = None
-                    if  problem.__class__.__name__ == 'ElasticityFem':
-                        jac = problem.jac_sample
-                        vhat = torch.inverse(torch.matmul(jac.transpose(1, 0), jac)).matmul(jac.transpose(1, 0)).matmul(res.view(-1, 1))
-                        vhat = vhat.view(1,1,-1)
+
             else:
                 exit('invalid proj_type')
             with timer.child('Projection').child('update state sample'):
