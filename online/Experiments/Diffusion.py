@@ -79,7 +79,7 @@ class Diffusion(Experiment):
         x = torch.cat((xhat_all, self.x[:, index, :]), 2)
         x = x.view(x.size(0)*x.size(1), x.size(2))
         _, hessian_part = decoder.hessianPart(x, lbllength, 'sec')
-        hessian_part *= self.alpha[index,:,:,:]
+        hessian_part *= self.alpha[index,:,:,:].to(self.x.device)
         hessian_part = hessian_part.view(-1, 1)
         for i in range(len(index)):
             if index[i] == 0 or index[i] == n_points-1:

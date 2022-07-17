@@ -100,45 +100,33 @@ def one_sim(st, gamma_path, sample_point):
     step = 0
     residual_0 = None
     for step in range(1, problem.Nstep+1):
-        with timer.child('Residual'):
-            res = problem.getResidualSample(xhat, decoder, sample_point, step)
-        
-        with timer.child('Projection'):
-            xhat_prev = xhat.detach().clone()
-            if proj_type == 'linear':
-                with timer.child('Projection').child('linear solve'):
-                    jac = problem.getJacobianSampleProj(xhat, decoder, sample_point)
-                    vhat = torch.inverse(torch.matmul(jac.transpose(1, 0), jac)).matmul(jac.transpose(1, 0)).matmul(res.view(-1, 1))
-                    vhat = vhat.view(1,1,-1)
-                    xhat += vhat*problem.dt
-            elif proj_type == 'nonlinear':
-                q_target = problem.q_sample.view_as(res) + res * problem.dt
-                with timer.child('Projection').child('nonlinear solve'):
-                    xhat_initial = xhat
-                    xhat = nonlinear_solver.solve(xhat_initial, q_target, sample_point, step_size = 1, max_iters = 10, print_info = False)
-                with timer.child('Projection').child('vhat update'):
-                    vhat = None
-
-            else:
-                exit('invalid proj_type')
-            with timer.child('Projection').child('update state sample'):
-                problem.updateStateSampleAll(xhat, decoder, sample_point, vhat)
-                t += problem.dt
-                
-        
-        q_now = problem.updateStateSampleAll(xhat, decoder, sample_point)[0].cpu()
+        res = problem.getResidualSample(xhat, decoder, sample_point, step)
+    
+        xhat_prev = xhat.detach().clone()
+        if proj_type == 'linear':
+            jac = problem.getJacobianSampleProj(xhat, decoder, sample_point)
+            vhat = torch.inverse(torch.matmul(jac.transpose(1, 0), jac)).matmul(jac.transpose(1, 0)).matmul(res.view(-1, 1))
+            vhat = vhat.view(1,1,-1)
+            xhat += vhat*problem.dt
+        elif proj_type == 'nonlinear':
+            q_target = problem.q_sample.view_as(res) + res * problem.dt
+            xhat_initial = xhat
+            xhat = nonlinear_solver.solve(xhat_initial, q_target, sample_point, step_size = 1, max_iters = 10, print_info = False)
+        else:
+            exit('invalid proj_type')
+            
+        q_now = problem.updateStateSampleAll(xhat, decoder, None)[0].cpu()
         q_actual = torch.tensor(state[step].q).view_as(q_now)
         if residual_0 is None:
             residual_0 = (q_actual - q_now).numpy()[:,0]
         else:
             residual_0 += (q_actual - q_now).numpy()[:,0]
-    with timer.child('Projection').child('update state sample'):
-        problem.updateStateSampleAll(xhat, decoder, vhat)
-    
+        
+        t += problem.dt
+
+    q_now = problem.updateStateSampleAll(xhat, decoder, None)[0].cpu()
     q_actual = torch.tensor(state[step].q).view_as(q_now)
-    q_now = problem.updateStateSampleAll(xhat, decoder, sample_point)[0].cpu()
     residual_0 += (q_actual - q_now).numpy()[:,0]
-    
     
     return abs(residual_0)
 
@@ -227,3 +215,5 @@ while metric_min > 140:
 
 print("Optimal Selection:")
 print(select_index)
+
+np.save("data/DiffuseImage/optimal_selection_test.npy", np.asarray(select_index))
