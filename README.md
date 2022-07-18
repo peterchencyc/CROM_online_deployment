@@ -52,5 +52,5 @@ python3 optimal_sampling/execute_diffusion.py -device [device]
 python3 optimal_sampling/execute_diffuseimage.py -device [device]
 ```
 
-We suggest to use GPU for optimal sampling. Normally it needs hours to get the optimal sampling.
+We suggest to use GPU for optimal sampling. Normally it needs to run hours.
 
