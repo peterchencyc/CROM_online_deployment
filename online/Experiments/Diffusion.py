@@ -23,12 +23,13 @@ class Diffusion(Experiment):
             mu = h5_file['/mu'][()]
         return T, Nx, mu
 
-    def __init__(self, config_path, F_path, ini_cond, device, a=1):
+    def __init__(self, config_path, F_path, ini_cond, device):
         T, Nx, mu = self.loadConfig(config_path)
         with open(F_path, 'r') as f:
             d = json.load(f)
             F = [2*i for i in d["F"]]
         
+        a = 1
         L = 1.        
         sigma=0.05
         self.a = a

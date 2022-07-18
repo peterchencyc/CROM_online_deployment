@@ -23,7 +23,7 @@ parser.add_argument('-me', help='path to the encoder',
                     type=str, nargs=1, required=True)
 parser.add_argument('-o', help='output path',
                     type=str, nargs=1, required=True)
-parser.add_argument('-exp', help='output path',
+parser.add_argument('-exp', help='experiment',
                     type=str, nargs=1, required=True)
 parser.add_argument('-config', help='config path',
                     type=str, nargs=1, required=False)
