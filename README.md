@@ -41,3 +41,16 @@ python3 online/execute_online.py -device [device]
 [device] is either cpu or cuda
 
 The solutions are stored in the output directory.
+
+## Optimal Sampling
+### Execute Diffusion
+```
+python3 optimal_sampling/execute_diffusion.py -device [device]
+```
+### Execute Diffuse Image
+```
+python3 optimal_sampling/execute_diffuseimage.py -device [device]
+```
+
+We suggest to use GPU for optimal sampling. Normally it needs hours to get the optimal sampling.
+

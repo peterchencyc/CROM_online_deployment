@@ -238,7 +238,9 @@ print("Optimal Selection:")
 print(select_index)
 
 if exp == 'diffusion':
-    np.save("data/Diffusion/optimal_selection_test.npy", np.asarray(select_index))
+    file_name = "data/Diffusion/optimal_selection_test.npy"
 elif exp == 'diffuseimage':
-    np.save("data/DiffuseImage/optimal_selection_test.npy", np.asarray(select_index))
+    file_name = "data/DiffuseImage/optimal_selection_test.npy"
+np.save(file_name, np.asarray(select_index))
+print("Save index to {}".format(file_name))
     
