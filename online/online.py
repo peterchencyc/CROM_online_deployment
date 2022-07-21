@@ -158,7 +158,7 @@ q0_gt = q0_gt.view(-1, q0_gt.size(2))
 
 sample_point = SamplePoint(problem)
 sample_style = 'random'
-sample_point.initialize(sample_style, num_sample_interior, num_sample_bdry, decoder, xhat, torch.zeros_like(xhat))
+sample_point.initialize(sample_style, -1, -1, decoder, xhat, torch.zeros_like(xhat))
 
 xhat = nonlinear_solver.solve(xhat, q0_gt, sample_point, 1, 20) # effectively serves as warm start for the rest of the gpu operations
 print('initial xhat: ', xhat)
@@ -180,17 +180,8 @@ if problem.__class__.__name__ == 'ElasticityFem':
 sample_point = SamplePoint(problem)
 sample_point.initialize(sample_style, num_sample_interior, num_sample_bdry, decoder, xhat, torch.zeros_like(xhat))
 
-
-# warm start
-num_wm = 100
-timer = Timer("warm start")
-for i in range(num_wm):
-    with timer.child('call 1 Sample All'):
-        problem.updateStateSampleAll(xhat, decoder, sample_point, torch.zeros_like(xhat))
-for i in range(num_wm):
-    with timer.child('call 2 Sample'):
-        problem.updateStateSample(xhat, decoder, sample_point, torch.zeros_like(xhat))
-timer.print_results()
+problem.updateStateSample(xhat, decoder, sample_point, torch.zeros_like(xhat))
+problem.updateStateSampleAll(xhat, decoder, sample_point, torch.zeros_like(xhat))
 
 timer = Timer("online")
 problem.timer = timer

@@ -362,7 +362,7 @@ class ElasticityFem(Experiment):
         q = q.view(1, q.size(0), q.size(1))
         return q
 
-    def updateStateSample(self, xhat, decoder, sample_point):
+    def updateStateSample(self, xhat, decoder, sample_point, vhat=None):
         q = self.updateStateSampleHelper(xhat, decoder, sample_point.indices)
         self.q_sample = q
         return q
