@@ -19,3 +19,17 @@ run_format = 'python online/online.py -md weights/Diffusion/case3_dec{device_pt}
 command = run_format.format(device = device, device_pt=device_pt)
 
 os.system(command)
+
+
+if device == 'cpu':
+    device_pt = 'cpu'
+elif device == 'cuda':
+    device_pt = 'cuda'
+else:
+    exit('invalid device')
+    
+run_format = 'python offline/draw_1d.py -d output/Diffusion/nonlinear/{device_pt}/sample_-1/Diffusion'
+
+command = run_format.format(device_pt = device_pt)
+
+os.system(command)

@@ -54,7 +54,7 @@ class SamplePoint(object):
         if self.problem.__class__.__name__ == 'DiffuseImage':
             self.indices = torch.tensor(np.load("data/DiffuseImage/optimal_selection.npy"))
         elif self.problem.__class__.__name__ == 'Diffusion':
-             self.indices = torch.tensor(np.load("data/Diffusion/optimal_selection.npy"))
+            self.indices = torch.tensor(np.load("data/Diffusion/optimal_selection.npy"))
     
     def initialize(self, sample_style, num_sample_interior, num_sample_bdry, decoder, xhat, vhat):
         if self.problem.__class__.__name__ == 'ElasticityFem':
