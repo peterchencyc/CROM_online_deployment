@@ -11,8 +11,6 @@ from util.IOHelper import *
 from ProjTypeScheduler import *
 import os
 
-from timer_cm import Timer
-
 parser = argparse.ArgumentParser(
     description='Neural Representation evolving')
 parser.add_argument('-md', help='path to the decoder',
@@ -182,11 +180,6 @@ sample_point.initialize(sample_style, num_sample_interior, num_sample_bdry, deco
 problem.updateStateSample(xhat, decoder, sample_point, torch.zeros_like(xhat))
 problem.updateStateSampleAll(xhat, decoder, sample_point, torch.zeros_like(xhat))
 
-timer = Timer("online")
-problem.timer = timer
-nonlinear_solver.timer = timer
-decoder.timer = timer
-
 if num_cpu_thread: torch.set_num_threads(num_cpu_thread)
 
 t = 0
@@ -204,52 +197,43 @@ for step in range(1, problem.Nstep+1):
     elif problem.__class__.__name__ == 'Diffusion':
         proj_type = proj_type_list[0]
     
-    with timer.child('Residual'):
-        res = problem.getResidualSample(xhat, decoder, sample_point, step)
+    res = problem.getResidualSample(xhat, decoder, sample_point, step)
     
-    with timer.child('Projection'):
-        xhat_prev = xhat.detach().clone()
-        if proj_type == 'linear':
-            with timer.child('Projection').child('linear solve'):
-                jac = problem.getJacobianSampleProj(xhat, decoder, sample_point)
-                vhat = torch.inverse(torch.matmul(jac.transpose(1, 0), jac)).matmul(jac.transpose(1, 0)).matmul(res.view(-1, 1))
-                vhat = vhat.view(1,1,-1)
-                xhat += vhat*problem.dt
-        elif proj_type == 'nonlinear':
-            q_target = problem.q_sample.view_as(res) + res * problem.dt
-            with timer.child('Projection').child('nonlinear solve'):
-                if nonlinear_initial_guess == 'encoder':
-                    q_target4enc = q_target.view(1, q_target.size(0), q_target.size(1))
-                    xhat_initial = encoder.forward(q_target4enc)
-                elif nonlinear_initial_guess == 'prev':
-                    xhat_initial = xhat
-                else:
-                    xhat_initial = xhat
-                xhat = nonlinear_solver.solve(xhat_initial, q_target, sample_point, step_size = 1, max_iters = 10)
-            with timer.child('Projection').child('vhat update'):
-                vhat = None
-                if  problem.__class__.__name__ == 'ElasticityFem':
-                    jac = problem.jac_sample
-                    vhat = torch.inverse(torch.matmul(jac.transpose(1, 0), jac)).matmul(jac.transpose(1, 0)).matmul(res.view(-1, 1))
-                    vhat = vhat.view(1,1,-1)
+    xhat_prev = xhat.detach().clone()
+    if proj_type == 'linear':
+        jac = problem.getJacobianSampleProj(xhat, decoder, sample_point)
+        vhat = torch.inverse(torch.matmul(jac.transpose(1, 0), jac)).matmul(jac.transpose(1, 0)).matmul(res.view(-1, 1))
+        vhat = vhat.view(1,1,-1)
+        xhat += vhat*problem.dt
+    elif proj_type == 'nonlinear':
+        q_target = problem.q_sample.view_as(res) + res * problem.dt
+        if nonlinear_initial_guess == 'encoder':
+            q_target4enc = q_target.view(1, q_target.size(0), q_target.size(1))
+            xhat_initial = encoder.forward(q_target4enc)
+        elif nonlinear_initial_guess == 'prev':
+            xhat_initial = xhat
         else:
-            exit('invalid proj_type')
-        with timer.child('Projection').child('update state sample'):
-            problem.updateStateSampleAll(xhat, decoder, sample_point, vhat)
-            t += problem.dt
+            xhat_initial = xhat
+        xhat = nonlinear_solver.solve(xhat_initial, q_target, sample_point, step_size = 1, max_iters = 10)
+        vhat = None
+        if  problem.__class__.__name__ == 'ElasticityFem':
+            jac = problem.jac_sample
+            vhat = torch.inverse(torch.matmul(jac.transpose(1, 0), jac)).matmul(jac.transpose(1, 0)).matmul(res.view(-1, 1))
+            vhat = vhat.view(1,1,-1)
+    else:
+        exit('invalid proj_type')
+    problem.updateStateSampleAll(xhat, decoder, sample_point, vhat)
+    t += problem.dt
 
-    with timer.child('updateWholeStateAndWrite'):
-        if step%write_every==0:
-            problem.updateState(xhat, decoder)
-            if not write_sample:
-                problem.write2file(t, output.format(step), xhat)
-            else:
-                problem.writeSample2file(sample_point, t, output.format(step), xhat)
+    
+    if step%write_every==0:
+        problem.updateState(xhat, decoder)
+        if not write_sample:
+            problem.write2file(t, output.format(step), xhat)
+        else:
+            problem.writeSample2file(sample_point, t, output.format(step), xhat)
 
-    with timer.child('callBack'):
-        remesh_flag = problem.callBack(step, xhat, decoder, vhat, xhat_prev)
-        if remesh_flag:
-            sample_point = SamplePoint(problem)
-            sample_point.initialize(sample_style, num_sample_interior, num_sample_bdry, decoder, xhat, vhat)
-
-timer.print_results()
+    remesh_flag = problem.callBack(step, xhat, decoder, vhat, xhat_prev)
+    if remesh_flag:
+        sample_point = SamplePoint(problem)
+        sample_point.initialize(sample_style, num_sample_interior, num_sample_bdry, decoder, xhat, vhat)

@@ -17,7 +17,6 @@ import numpy as np
 import math
 from SimulationData import *
 from torch import linalg as LA
-from timer_cm import Timer
 
 def computeDifference(V, T):
     D = []
@@ -119,7 +118,6 @@ class ElasticityFem(Experiment):
         self.v = torch.zeros(self.mass.size(0), self.sim_dim).to(self.x.device)
         self.bc = ConfigBC(self.test_number, self.device).bc
         self.indices_bdry = None
-        self.timer = Timer("ElasticityFem")
         self.q_sample_prev = None
     
     def getPhysicalInitialCondition(self):
@@ -369,25 +367,23 @@ class ElasticityFem(Experiment):
     
     def updateStateSampleAll(self, xhat, decoder, sample_point, vhat=None):
         # always use the previous xhat's jacobian to update the velocity
-        with self.timer.child('Projection').child('update state sample').child('grad'):
-            # update velocity
-            if vhat is not None:
-                vel = self.jac_sample @ vhat.view(-1,1)
-                self.v_sample = vel.view(-1, self.sim_dim)
+        # update velocity
+        if vhat is not None:
+            vel = self.jac_sample @ vhat.view(-1,1)
+            self.v_sample = vel.view(-1, self.sim_dim)
         
-        with self.timer.child('Projection').child('update state sample').child('forward'):
-            lbllength = xhat.size(2)
-            x = self.x[:, sample_point.indices_all, :]
-            xhat_all = xhat.expand(xhat.size(0), x.size(1), xhat.size(2))
-            x = torch.cat((xhat_all, x), 2)
-            x = x.view(x.size(0)*x.size(1), x.size(2))
+        lbllength = xhat.size(2)
+        x = self.x[:, sample_point.indices_all, :]
+        xhat_all = xhat.expand(xhat.size(0), x.size(1), xhat.size(2))
+        x = torch.cat((xhat_all, x), 2)
+        x = x.view(x.size(0)*x.size(1), x.size(2))
 
-            jacobian_part, q = decoder.jacobianPartAndFunc(x, lbllength, 'fir')
-            jac = jacobian_part.view(-1, jacobian_part.size(2))
-            
-            self.q_sample_all = q
-            self.q_sample = q[:, 0:sample_point.indices.size(0), :]
-            self.jac_sample = jac[0:3*sample_point.indices.size(0), :]
+        jacobian_part, q = decoder.jacobianPartAndFunc(x, lbllength, 'fir')
+        jac = jacobian_part.view(-1, jacobian_part.size(2))
+        
+        self.q_sample_all = q
+        self.q_sample = q[:, 0:sample_point.indices.size(0), :]
+        self.jac_sample = jac[0:3*sample_point.indices.size(0), :]
         
         return q
     

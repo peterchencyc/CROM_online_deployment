@@ -1,5 +1,4 @@
 import torch
-from timer_cm import Timer
 
 class NonlinearSolver():
     def __init__(self, problem, decoder, diff_threshold, step_size_threshold):
@@ -7,7 +6,6 @@ class NonlinearSolver():
         self.decoder = decoder
         self.diff_threshold = diff_threshold
         self.step_size_threshold = step_size_threshold
-        self.timer = Timer('NonlinearSolver')
     
     def computeLoss(self, r):
         element_wise_square= torch.mul(r, r)
@@ -16,11 +14,10 @@ class NonlinearSolver():
         return loss
     
     def computeLossAndR(self, xhat, q_target, sample_point):
-        with self.timer.child('Projection').child('nonlinear solve').child('computeLossAndR'):
-            q = self.problem.updateStateSample(xhat, self.decoder, sample_point)
-            r = (q - q_target).view(-1, 1)
-            loss = self.computeLoss(r)
-            return loss, r
+        q = self.problem.updateStateSample(xhat, self.decoder, sample_point)
+        r = (q - q_target).view(-1, 1)
+        loss = self.computeLoss(r)
+        return loss, r
 
     def solve(self, xhat, q_target, sample_point, step_size = 1, max_iters = 5, print_info=True):
         xhat_new = xhat.detach().clone()
@@ -35,8 +32,7 @@ class NonlinearSolver():
         # https://en.wikipedia.org/wiki/Gauss%E2%80%93Newton_algorithm
         while torch.linalg.norm(diff) > self.diff_threshold and steps < max_iters:
             xhat = xhat_new.detach().clone()
-            with self.timer.child('Projection').child('nonlinear solve').child('computeJacobian'):
-                jac = self.problem.getJacobianSample(xhat, self.decoder, sample_point)
+            jac = self.problem.getJacobianSample(xhat, self.decoder, sample_point)
             
             loss, r = self.computeLossAndR(xhat, q_target, sample_point)
             

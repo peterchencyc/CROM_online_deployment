@@ -95,11 +95,6 @@ def one_sim(st, param_path, sample_point):
     problem.updateSampleIndicesWithProblemSpeficifInfo(sample_point)
     problem.jac_sample = problem.getJacobianSample(xhat, decoder, sample_point)
     problem.updateStateSample(xhat, decoder, sample_point)
-
-    timer = Timer("online")
-    problem.timer = timer
-    nonlinear_solver.timer = timer
-    decoder.timer = timer
     
     data_path = os.path.dirname(param_path)
     data_list = [d for d in sorted(os.listdir(data_path)) if d[-2:] == "h5" and d[:6] != "config"]
