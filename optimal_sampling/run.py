@@ -199,7 +199,7 @@ sample_point = SamplePoint
 
 start_time = time.time()
 
-
+# empirical value
 if exp == 'diffusion':
     metric_target = 3
 elif exp == 'diffuseimage':
