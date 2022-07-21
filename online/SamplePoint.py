@@ -14,7 +14,7 @@ class SamplePoint(object):
             indices_interior = selection_interior.nonzero().view(-1)
 
             if num_sample_interior== -1 and num_sample_bdry==-1:
-                self.indices = self.updateIndicesFull()
+                self.updateIndicesFull()
             else:
                 if num_sample_interior!=-1:
                     ind_rand = torch.randperm(indices_interior.size(0))[:num_sample_interior]
