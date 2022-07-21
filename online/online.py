@@ -163,7 +163,6 @@ sample_point.initialize(sample_style, -1, -1, decoder, xhat, torch.zeros_like(xh
 xhat = nonlinear_solver.solve(xhat, q0_gt, sample_point, 1, 20) # effectively serves as warm start for the rest of the gpu operations
 print('initial xhat: ', xhat)
 problem.updateState(xhat, decoder)
-writeInitialLabel(xhat, md)
 
 if exp == 'diffusion':
     sample_style = 'optimal'
