@@ -121,21 +121,23 @@ def one_sim(st, param_path, sample_point):
             xhat = nonlinear_solver.solve(xhat_initial, q_target, sample_point, step_size = 1, max_iters = 10, print_info = False)
         else:
             exit('invalid proj_type')
-            
-        q_now = problem.updateStateSampleAll(xhat, decoder, None)[0].cpu()
-        q_actual = torch.tensor(state[step].q).view_as(q_now)
-        if residual_0 is None:
-            residual_0 = (q_actual - q_now).numpy()[:,0]
-        else:
-            residual_0 += (q_actual - q_now).numpy()[:,0]
+        
+        # Run every step
+        if step % 1 == 0:
+            q_now = problem.updateStateSampleAll(xhat, decoder, None)[0].cpu()
+            q_actual = torch.tensor(state[step].q).view_as(q_now)
+            if residual_0 is None:
+                residual_0 = abs(q_actual - q_now).numpy()[:,0]
+            else:
+                residual_0 += abs(q_actual - q_now).numpy()[:,0]
         
         t += problem.dt
 
     q_now = problem.updateStateSampleAll(xhat, decoder, None)[0].cpu()
     q_actual = torch.tensor(state[step].q).view_as(q_now)
-    residual_0 += (q_actual - q_now).numpy()[:,0]
+    residual_0 += abs(q_actual - q_now).numpy()[:,0]
     
-    return abs(residual_0)
+    return residual_0
 
 def all_sim(sample_point):
     
