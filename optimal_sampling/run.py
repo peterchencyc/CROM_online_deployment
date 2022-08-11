@@ -173,16 +173,11 @@ if sample_style == 'random':
     select_index = [i for i in np.random.choice(np.arange(n_points), 1)]
 elif sample_style == 'random_':
     if exp == 'diffusion':
-        select_index = [271]
+        select_index = np.load("data/Diffusion/optimal_start.npy").tolist()
     elif exp == 'diffuseimage':
-        select_index = [31998, 45714, 28942, 23539, 43573, 64003, 26601,  2461, 28917,
-                        61036, 51421, 45607, 57811, 51065, 45619, 26052,  5698, 53996,
-                        61626, 34154, 25595, 57847,   391,  1274, 28683, 39167, 54956,
-                        20622, 61846, 12096,  1404, 33973, 64733,  3495, 59022, 62242,
-                        33768, 61202, 20508, 49453, 39291, 59354, 15486, 58285, 35930,
-                        27477, 61957,  8745, 20925, 48365]
+        select_index = np.load("data/DiffuseImage/optimal_start.npy").tolist()
 else:
-    select_index = [0]
+    select_index = np.arange(n_points).tolist()
 
 select_index = [i for i in select_index]
 
@@ -198,9 +193,9 @@ start_time = time.time()
 
 # empirical value
 if exp == 'diffusion':
-    metric_target = 3
+    metric_target = 4
 elif exp == 'diffuseimage':
-    metric_target = 140
+    metric_target = 150
 
 while metric_min > metric_target:
     
@@ -208,6 +203,9 @@ while metric_min > metric_target:
     residual_total = all_sim(sample_point)
     metric = cal_metric(residual_total)
     print("#{}, Metric now {}, Time used {}s".format(len(select_index), metric, round(time.time()-start_time, 2)))
+    
+    if len(sample_point.indices) >= n_points:
+        sys.exit("Already use all points. Exit.")    
     
     index_res = np.asarray([x[0] for x in sorted(enumerate(abs(residual_total)), key=lambda x: x[1], reverse=True)])
     

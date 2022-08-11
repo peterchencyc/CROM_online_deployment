@@ -31,7 +31,7 @@ for f in sorted(os.listdir(data_folder)):
     x = np.asarray(state.x)[:,0]
     q = np.asarray(state.q)[:,0]
     
-    fig = plt.figure(figsize=(16, 12), dpi=200)
+    fig = plt.figure(figsize=(16, 12), dpi=50)
     ax = fig.add_subplot()
     im1, = ax.plot(x, q, "#ff7f00", linewidth=5)
     ax.set_xlabel('x', fontsize=28)
