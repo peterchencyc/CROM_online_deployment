@@ -1,11 +1,22 @@
 # CROM: Continuous Reduced-Order Modeling of PDEs Using Implicit Neural Representations (Part II - Latent Space Dynamics)
+
 <p align="center">
-<img src="teaser.png"  width="700"/>
+<img src="teaser/Diffusion.gif"  width="320"/>
+<img src="teaser/DiffuseImage.gif"  width="320"/>
+</p>
+<p align="center">
+<img src="teaser.png"  width="640"/>
 </p>
 
-> TODO: gif for advection, image smoothing, and elasticity
+> TODO: gif for elasticity
 
-This repository is part II of the official implementation of the paper, "[CROM: Continuous Reduced-Order Modeling of PDEs Using Implicit Neural Representations](https://arxiv.org/abs/2206.02607)". Part II focuses on Section 4 of the paper, Latent Space Dynamics
+This repository is part II of the official implementation of the paper:
+
+> **[CROM: Continuous Reduced-Order Modeling of PDEs Using Implicit Neural Representations](https://arxiv.org/abs/2206.02607)**  
+> [Peter Yichen Chen](https://www.cs.columbia.edu/~rundi/), Jinxu Xiang, Dong Heon Cho, G A Pershing, Henrique Teles Maia, Maurizio Chiaramonte, Kevin Carlberg, Eitan Grinspun  
+> Columbia University, Meta Reality Labs Research, University of Toronto  
+
+Part II focuses on Section 4 of the paper, Latent Space Dynamics
 
 We assume knowledge of Part I of the implementation, where the user already trains a low-dimensinal manifold from the training data (Section 3 of the paper, Manifold Construction). Part II solves PDEs by rapidly traversing in the latent space.
 
