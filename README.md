@@ -73,7 +73,7 @@ Computed results are stored in the output directory.
 ## Optimal Sampling
 As discussed in Section 4.4 of the paper, our method achives maximum speedup by using very few spatial samples (compared to the ground truth training data). One way to choose these samples is via the greedy heuristics discussed in the paper. 
 
-> Add jinxu optimal sampling animation
+> TODO: Add jinxu optimal sampling animation
 
 Below we provide two examples of computing spatial samples via this greedy heuristics. 
 
