@@ -28,7 +28,7 @@ elif device == 'cuda':
 else:
     exit('invalid device')
     
-run_format = 'python draw/draw_1d.py -d output/Diffusion/nonlinear/{device_pt}/sample_-1/Diffusion'
+run_format = 'python common/draw_1d.py -d output/Diffusion/nonlinear/{device_pt}/sample_-1/Diffusion'
 
 command = run_format.format(device_pt = device_pt)
 
