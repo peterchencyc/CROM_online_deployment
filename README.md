@@ -8,12 +8,14 @@
 <img src="teaser.png"  width="640"/>
 </p>
 
+> TODO: Replace current gif with the ones from supplementary video (much more polished)
+
 > TODO: gif for elasticity
 
 This repository is part II of the official implementation of the paper:
 
 > **[CROM: Continuous Reduced-Order Modeling of PDEs Using Implicit Neural Representations](https://arxiv.org/abs/2206.02607)**  
-> [Peter Yichen Chen](https://www.cs.columbia.edu/~rundi/), Jinxu Xiang, Dong Heon Cho, G A Pershing, Henrique Teles Maia, Maurizio Chiaramonte, Kevin Carlberg, Eitan Grinspun  
+> [Peter Yichen Chen](https://peterchencyc.com), [Jinxu Xiang](https://www.linkedin.com/in/jinxu-xiang-0862631a2), [Dong Heon Cho](https://www.linkedin.com/in/david-cho-003285131), G A Pershing, [Henrique Teles Maia](https://henriquetmaia.github.io), [Maurizio Chiaramonte](https://www.linkedin.com/in/maurizio-chiaramonte-03779762), [Kevin Carlberg](https://kevintcarlberg.net), [Eitan Grinspun](https://www.dgp.toronto.edu/~eitan/)
 > Columbia University, Meta Reality Labs Research, University of Toronto  
 
 Part II focuses on Section 4 of the paper, Latent Space Dynamics
@@ -69,7 +71,11 @@ python3 online/execute_online.py -device [device]
 Computed results are stored in the output directory.
 
 ## Optimal Sampling
-As discussed in Section 4.4 of the paper, our method achives maximum speedup by using very few spatial samples (compared to the ground truth training data). One way to choose these samples is via the greedy heuristics discussed in the paper. Below we provide two examples of computing spatial samples via this greedy heuristics. 
+As discussed in Section 4.4 of the paper, our method achives maximum speedup by using very few spatial samples (compared to the ground truth training data). One way to choose these samples is via the greedy heuristics discussed in the paper. 
+
+> Add jinxu optimal sampling animation
+
+Below we provide two examples of computing spatial samples via this greedy heuristics. 
 
 ### Theromodynamics
 ```
@@ -86,13 +92,10 @@ Alternatively, spatial samples can be also be chosen via the stochastic sampling
 ## High-Level structure
 The code is organized as follows:
 * *common* contains utility functions
-* *data* contains necessary precomputed data for latent space dynamics. They are not training data.
+* *data* contains necessary precomputed data for latent space dynamics. They are NOT training data.
 * *online* contains the real meat of the latent space dynamics that use very few spatial samples
 * *optimal_sampling* contains all the code related to optimal sampling
-* *weights* pre-trained model produced Part I
-
-> TODO: move draw into common
-
+* *weights* pre-trained model produced by Part I
 
 ## Citation
 If this library helped you in a publication, please cite our paper so others can find our code and benefit as well.
