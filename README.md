@@ -71,9 +71,13 @@ python3 online/execute_online.py -device [device]
 Computed results are stored in the output directory.
 
 ## Optimal Sampling
-As discussed in Section 4.4 of the paper, our method achives maximum speedup by using very few spatial samples (compared to the ground truth training data). One way to choose these samples is via the greedy heuristics discussed in the paper. 
+As discussed in Section 4.4 of the paper, our method achieves maximum speedup by using very few spatial samples (compared to the ground truth training data). One way to choose these samples is via the greedy heuristics discussed in the paper. 
 
-> TODO: Add jinxu optimal sampling animation
+<p align="center">
+<img src="teaser/optimal_sampling.gif"  width="320"/>
+</p>
+
+As shown above, as this approach gradually adds samples, the accuracy of the latent space dynamics improves.
 
 Below we provide two examples of computing spatial samples via this greedy heuristics. 
 
