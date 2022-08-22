@@ -1,16 +1,14 @@
 # CROM: Continuous Reduced-Order Modeling of PDEs Using Implicit Neural Representations (Part II - Latent Space Dynamics)
 
 <p align="center">
-<img src="teaser/Diffusion.gif"  width="320"/>
-<img src="teaser/DiffuseImage.gif"  width="320"/>
+<img src="teaser/1d-trim.gif"  width="640"/>
 </p>
 <p align="center">
-<img src="teaser.png"  width="640"/>
+<img src="teaser/img-smoothing.gif"  width="640"/>
 </p>
-
-> TODO: Replace current gif with the ones from supplementary video (much more polished)
-
-> TODO: gif for elasticity
+<p align="center">
+<img src="teaser/piggy-sphere.gif"  width="640"/>
+</p>
 
 This repository is part II of the official implementation of the paper:
 
