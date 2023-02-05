@@ -1,21 +1,19 @@
 # CROM: Continuous Reduced-Order Modeling of PDEs Using Implicit Neural Representations (Part II - Latent Space Dynamics)
 
 <p align="center">
-<img src="teaser/Diffusion.gif"  width="320"/>
-<img src="teaser/DiffuseImage.gif"  width="320"/>
+<img src="teaser/1d-trim.gif"  width="640"/>
 </p>
 <p align="center">
-<img src="teaser.png"  width="640"/>
+<img src="teaser/img-smoothing.gif"  width="640"/>
 </p>
-
-> TODO: Replace current gif with the ones from supplementary video (much more polished)
-
-> TODO: gif for elasticity
+<p align="center">
+<img src="teaser/piggy-sphere.gif"  width="640"/>
+</p>
 
 This repository is part II of the official implementation of the paper:
 
 > **[CROM: Continuous Reduced-Order Modeling of PDEs Using Implicit Neural Representations](https://arxiv.org/abs/2206.02607)**  
-> [Peter Yichen Chen](https://peterchencyc.com), [Jinxu Xiang](https://www.linkedin.com/in/jinxu-xiang-0862631a2), [Dong Heon Cho](https://www.linkedin.com/in/david-cho-003285131), G A Pershing, [Henrique Teles Maia](https://henriquetmaia.github.io), [Maurizio Chiaramonte](https://www.linkedin.com/in/maurizio-chiaramonte-03779762), [Kevin Carlberg](https://kevintcarlberg.net), [Eitan Grinspun](https://www.dgp.toronto.edu/~eitan/)
+> [Peter Yichen Chen](https://peterchencyc.com), [Jinxu Xiang](https://www.linkedin.com/in/jinxu-xiang-0862631a2), [Dong Heon Cho](https://www.linkedin.com/in/david-cho-003285131), G A Pershing, [Henrique Teles Maia](https://henriquetmaia.github.io), [Maurizio Chiaramonte](https://www.linkedin.com/in/maurizio-chiaramonte-03779762), [Kevin Carlberg](https://kevintcarlberg.net), [Eitan Grinspun](https://www.dgp.toronto.edu/~eitan/)  
 > Columbia University, Meta Reality Labs Research, University of Toronto  
 
 Part II focuses on Section 4 of the paper, Latent Space Dynamics
