@@ -66,6 +66,17 @@ python3 online/execute_diffuseimage.py -device [device]
 ```
 python3 online/execute_online.py -device [device]
 ```
+
+### Advection
+```
+python3 online/execute_advection.py -device [device]
+```
+
+### Burgers' Equation
+```
+python3 online/execute_burger.py -device [device]
+```
+
 [device] is either cpu or cuda. Depending on the choice of [device], our code can be executed either on cpu or gpu. For the elasticity example, executing on cuda significantly accelerates the simulation.
 
 Computed results are stored in the output directory.

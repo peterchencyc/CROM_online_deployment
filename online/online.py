@@ -7,6 +7,8 @@ from NonlinearSolver import *
 from Experiments.ElasticityFem import *
 from Experiments.DiffuseImage import *
 from Experiments.Diffusion import *
+from Experiments.Advect import *
+from Experiments.Burger import *
 from util.IOHelper import *
 from ProjTypeScheduler import *
 import os
@@ -117,9 +119,15 @@ elif exp == 'diffuse_image':
     sample_str = 'sample_{num}'.format(num = num_sample_interior)
 elif exp == 'elasticity_fem':
     sample_str = 'sample-interior_{interior}_bdry_{bdry}'.format(interior = num_sample_interior, bdry = num_sample_bdry)
+elif exp == 'advection':
+    sample_str = 'full'
+elif exp == 'burger':
+    sample_str = 'full'
 
-
-output = os.path.join(output,os.path.basename(os.path.dirname(md)), proj_type_list[0], device_str, sample_str, os.path.basename(os.path.dirname(config)),"h5_f_{:010d}.h5")
+if args.config:
+    output = os.path.join(output,os.path.basename(os.path.dirname(md)), proj_type_list[0], device_str, sample_str, os.path.basename(os.path.dirname(config)),"h5_f_{:010d}.h5")
+else:
+    output = os.path.join(output,os.path.basename(os.path.dirname(md)), proj_type_list[0], device_str, sample_str, os.path.basename(os.path.dirname(md)),"h5_f_{:010d}.h5")
 
 if exp == 'diffusion':
     problem = Diffusion(config, f_path, ini_cond, device)
@@ -127,6 +135,12 @@ elif exp == 'diffuse_image':
     problem = DiffuseImage(config, ini_cond, device)
 elif exp == 'elasticity_fem':
     problem = ElasticityFem(config, ini_cond, dis_or_pos, device)
+elif exp == 'advection':
+    problem = Advect(ini_cond)
+elif exp == 'burger':
+    with open(f_path, 'r') as f:
+        params = json.load(f)
+    problem = Burger(ini_cond, params)
 else:
     exit('invalid experiment')
 
@@ -149,13 +163,16 @@ problem.remesh_file = None if not args.remesh_file else args.remesh_file
 
 nonlinear_solver = NonlinearSolver(problem, decoder, diff_threshold, step_size_threshold)
 
-q0_gt = problem.getPhysicalInitialCondition() 
+q0_gt = problem.getPhysicalInitialCondition().float()
 xhat = encoder.forward(q0_gt)
 q0_gt = q0_gt.view(-1, q0_gt.size(2))
 
 
 sample_point = SamplePoint(problem)
-sample_style = 'random'
+if exp == 'elasticity_fem':
+    sample_style = 'random'
+else:
+    sample_style = 'full'
 sample_point.initialize(sample_style, -1, -1, decoder, xhat, torch.zeros_like(xhat))
 
 xhat = nonlinear_solver.solve(xhat, q0_gt, sample_point, 1, 20) # effectively serves as warm start for the rest of the gpu operations
@@ -168,6 +185,10 @@ elif exp == 'diffuse_image':
     sample_style = 'optimal'
 elif exp == 'elasticity_fem':
     sample_style = 'random'
+elif exp == 'advection':
+    sample_style = 'full'
+elif exp == 'burger':
+    sample_style = 'full'
 
 if args.vis_mesh_file: problem.vis_mesh_file = args.vis_mesh_file[0]
 
@@ -192,10 +213,19 @@ else:
 for step in range(1, problem.Nstep+1):
     if problem.__class__.__name__ == 'ElasticityFem':
         proj_type, nonlinear_initial_guess = proj_type_scheduler.getProjType(step)
+        nonlinear_iter = 10
     elif problem.__class__.__name__ == 'DiffuseImage':
         proj_type = proj_type_list[0]
+        nonlinear_iter = 10
     elif problem.__class__.__name__ == 'Diffusion':
         proj_type = proj_type_list[0]
+        nonlinear_iter = 10
+    elif problem.__class__.__name__ == 'Advect':
+        proj_type = proj_type_list[0]
+        nonlinear_iter = 50
+    elif problem.__class__.__name__ == 'Burger':
+        proj_type = proj_type_list[0]
+        nonlinear_iter = 50
     
     res = problem.getResidualSample(xhat, decoder, sample_point, step)
     
@@ -214,7 +244,7 @@ for step in range(1, problem.Nstep+1):
             xhat_initial = xhat
         else:
             xhat_initial = xhat
-        xhat = nonlinear_solver.solve(xhat_initial, q_target, sample_point, step_size = 1, max_iters = 10)
+        xhat = nonlinear_solver.solve(xhat_initial, q_target, sample_point, step_size = 1, max_iters = nonlinear_iter)
         vhat = None
         if  problem.__class__.__name__ == 'ElasticityFem':
             jac = problem.jac_sample

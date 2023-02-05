@@ -46,7 +46,7 @@ class NonlinearSolver():
             beta = 0.5
 
             t = step_size
-            ln_search_max_iter = 10
+            ln_search_max_iter = 40
             backtracking_count = 0
 
             while ln_search_max_iter > 0:

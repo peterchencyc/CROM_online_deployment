@@ -81,6 +81,12 @@ class SamplePoint(object):
                 self.updateIndicesUniform()
             else:
                 self.updateIndicesFull()
+        elif self.problem.__class__.__name__ == 'Advect':
+            self.updateIndicesFull()
+        elif self.problem.__class__.__name__ == 'Burger':
+            self.updateIndicesFull()
+        else:
+            raise(NotImplementedError)
         
         self.indices = torch.tensor(self.indices, dtype=torch.long)
     
