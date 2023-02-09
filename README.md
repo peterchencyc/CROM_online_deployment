@@ -75,6 +75,11 @@ python3 online/execute_advection.py -device [device]
 python3 online/execute_burger.py -device [device]
 ```
 
+### Karman vortex street
+```
+python3 online/execute_karman.py
+```
+
 [device] is either cpu or cuda. Depending on the choice of [device], our code can be executed either on cpu or gpu. For the elasticity example, executing on cuda significantly accelerates the simulation.
 
 Computed results are stored in the output directory.
