@@ -21,6 +21,6 @@ command = run_format.format(device = device, device_pt=device_pt)
 os.system(command)
 
     
-command = 'python common/draw_diffusion.py -d output/Diffusionn'
+command = 'python common/draw_diffusion.py -d output/Diffusion'
 
 os.system(command)
