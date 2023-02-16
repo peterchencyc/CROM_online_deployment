@@ -124,10 +124,7 @@ elif exp == 'advection':
 elif exp == 'burger':
     sample_str = 'full'
 
-if args.config:
-    output = os.path.join(output,os.path.basename(os.path.dirname(md)), proj_type_list[0], device_str, sample_str, os.path.basename(os.path.dirname(config)),"h5_f_{:010d}.h5")
-else:
-    output = os.path.join(output,os.path.basename(os.path.dirname(md)), proj_type_list[0], device_str, sample_str, os.path.basename(os.path.dirname(md)),"h5_f_{:010d}.h5")
+output = os.path.join(output,os.path.basename(os.path.dirname(md)),"h5_f_{:010d}.h5")
 
 if exp == 'diffusion':
     problem = Diffusion(config, f_path, ini_cond, device)

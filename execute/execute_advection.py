@@ -21,15 +21,6 @@ command = run_format.format(device = device, device_pt=device_pt)
 os.system(command)
 
 
-if device == 'cpu':
-    device_pt = 'cpu'
-elif device == 'cuda':
-    device_pt = 'cuda'
-else:
-    exit('invalid device')
-    
-run_format = 'python common/draw_advection.py -d output/Advection/nonlinear/{device_pt}/full/Advection'
-
-command = run_format.format(device_pt = device_pt)
+command = 'python common/draw_advection.py -d output/Advection'
 
 os.system(command)

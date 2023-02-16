@@ -20,16 +20,7 @@ command = run_format.format(device = device, device_pt=device_pt)
 
 os.system(command)
 
-
-if device == 'cpu':
-    device_pt = 'cpu'
-elif device == 'cuda':
-    device_pt = 'cuda'
-else:
-    exit('invalid device')
     
-run_format = 'python common/draw_1d.py -d output/Diffusion/nonlinear/{device_pt}/sample_-1/Diffusion'
-
-command = run_format.format(device_pt = device_pt)
+command = 'python common/draw_diffusion.py -d output/Diffusionn'
 
 os.system(command)

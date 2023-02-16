@@ -15,7 +15,7 @@ def frames2gif(src_dir, save_path, fps=40):
     
     
 parser = argparse.ArgumentParser(
-    description='PNG to GIF')
+    description='Draw Karman Fulid')
 parser.add_argument('-folder', help='folder',
                     type=str, required=True) 
 parser.add_argument('-fps', help='fps', default=40,

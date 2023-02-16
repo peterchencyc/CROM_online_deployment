@@ -14,8 +14,8 @@ from PIL import Image
 from SimulationData import *
 
 parser = argparse.ArgumentParser(
-    description='Draw 1D')
-parser.add_argument('-d', help='Data path for diffusion',
+    description='Draw Diffusion')
+parser.add_argument('-d', help='Data path for Diffusion',
                     type=str, nargs=1, required=True)
 args = parser.parse_args()
 
@@ -52,7 +52,7 @@ for f in sorted(os.listdir(data_folder)):
     data_path = os.path.join(data_folder, f)
     new_frame = Image.open(data_path)
     frames.append(new_frame)
-gif_path = os.path.join(data_folder, "Diffusion.gif")
+gif_path = os.path.join(data_folder, "1Diffusion.gif")
 frames[0].save(gif_path, format='GIF',
                append_images=frames[1:],
                save_all=True,
