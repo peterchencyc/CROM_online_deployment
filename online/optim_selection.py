@@ -175,7 +175,7 @@ elif sample_style == 'random_':
     if exp == 'diffusion':
         select_index = np.load("data/Diffusion/optimal_start.npy").tolist()
     elif exp == 'diffuseimage':
-        select_index = np.load("data/DiffuseImage/optimal_start.npy").tolist()
+        select_index = np.load("data/Diffuse_Image/optimal_start.npy").tolist()
 else:
     select_index = np.arange(n_points).tolist()
 
@@ -235,7 +235,7 @@ print(select_index)
 if exp == 'diffusion':
     file_name = "data/Diffusion/optimal_selection_test.npy"
 elif exp == 'diffuseimage':
-    file_name = "data/DiffuseImage/optimal_selection_test.npy"
+    file_name = "data/Diffuse_Image/optimal_selection_test.npy"
 np.save(file_name, np.asarray(select_index))
 print("Save index to {}".format(file_name))
     
