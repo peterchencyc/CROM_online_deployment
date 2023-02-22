@@ -1,1 +1,6 @@
 h5py==3.4.0
+imageio
+opencv-python
+tqdm
+argparse
+matplotlib
