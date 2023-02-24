@@ -47,37 +47,34 @@ pip install torch==1.11.0+cu113 -f https://download.pytorch.org/whl/cu113/torch_
 pip install -r requirements.txt
 ```
 
-In summary, our only dependecies are [PyTorch](https://pytorch.org) and [h5py](https://www.h5py.org).
+In summary, our only dependecies are [PyTorch](https://pytorch.org), [h5py](https://www.h5py.org) and some common used drawing packages.
 
 ## Latent Space Dynamics
 With everything above installed, we are ready to run the actual code :) Below we provide three examples that solve PDEs by traversing in the latent space (Section 4 of the paper).
 
 ### Theromodynamics
 ```
-python3 online/execute_diffusion.py -device [device]
+python3 execute/execute_diffusion.py -device [device]
 ```
 ### Image Smoothing
 ```
-python3 online/execute_diffuseimage.py -device [device]
+python3 execute/execute_diffuseimage.py -device [device]
 ```
 ### Elasticity / Soft Body
 ```
-python3 online/execute_online.py -device [device]
+python3 execute/execute_online.py -device [device]
 ```
-
 ### Advection
 ```
-python3 online/execute_advection.py -device [device]
+python3 execute/execute_advection.py -device [device]
 ```
-
 ### Burgers' Equation
 ```
-python3 online/execute_burger.py -device [device]
+python3 execute/execute_burger.py -device [device]
 ```
-
 ### Karman vortex street
 ```
-python3 online/execute_karman.py
+python3 execute/execute_karman.py
 ```
 
 [device] is either cpu or cuda. Depending on the choice of [device], our code can be executed either on cpu or gpu. For the elasticity example, executing on cuda significantly accelerates the simulation.
@@ -97,11 +94,11 @@ Below we provide two examples of computing spatial samples via this greedy heuri
 
 ### Theromodynamics
 ```
-python3 optimal_sampling/execute_diffusion.py -device [device]
+python3 execute/execute_optim_diffusion.py -device [device]
 ```
 ### Image Smoothing
 ```
-python3 optimal_sampling/execute_diffuseimage.py -device [device]
+python3 execute/execute_optim_diffuseimage.py -device [device]
 ```
 We recommend using "CUDA" for device for better performances. Optimal sampling typically takes hours to run.
 
