@@ -39,7 +39,6 @@ class SamplePoint(object):
                 self.indices = torch.randperm(indices_interior.size(0))[:num_sample_interior]
     
     def updateIndicesUniform(self):
-        torch.manual_seed(seed)
         if self.problem.__class__.__name__ == 'DiffuseImage':
             x, y = np.meshgrid(np.asarray(np.linspace(16,240,8), dtype=np.int32),np.asarray(np.linspace(16,240,8), dtype=np.int32))
             self.indices = torch.tensor([x.flatten()[i]+256*y.flatten()[i] for i in range(len(x.flatten()))])
@@ -52,7 +51,7 @@ class SamplePoint(object):
         
     def updateIndicesOptimal(self):
         if self.problem.__class__.__name__ == 'DiffuseImage':
-            self.indices = torch.tensor(np.load("data/DiffuseImage/optimal_selection.npy"))
+            self.indices = torch.tensor(np.load("data/Diffuse_Image/optimal_selection.npy"))
         elif self.problem.__class__.__name__ == 'Diffusion':
             self.indices = torch.tensor(np.load("data/Diffusion/optimal_selection.npy"))
     
