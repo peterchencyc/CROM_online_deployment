@@ -115,11 +115,13 @@ The code is organized as follows:
 ## Citation
 If this library helped you in a publication, please cite our paper so others can find our code and benefit as well.
 ```
-@article{chen2022crom,
-  title={{CROM}: Continuous Reduced-Order Modeling of {PDE}s Using Implicit Neural Representations},
-  author={Chen, Peter Yichen and Xiang, Jinxu and Cho, Dong Heon and Pershing, GA and Maia, Henrique Teles and Chiaramonte, Maurizio and Carlberg, Kevin and Grinspun, Eitan},
-  journal={arXiv preprint arXiv:2206.02607},
-  year={2022}
+@inproceedings{
+chen2023crom,
+title={{CROM}: Continuous Reduced-Order Modeling of {PDE}s Using Implicit Neural Representations},
+author={Peter Yichen Chen and Jinxu Xiang and Dong Heon Cho and Yue Chang and G A Pershing and Henrique Teles Maia and Maurizio M Chiaramonte and Kevin Thomas Carlberg and Eitan Grinspun},
+booktitle={The Eleventh International Conference on Learning Representations },
+year={2023},
+url={https://openreview.net/forum?id=FUORz1tG8Og}
 }
 ```
 
