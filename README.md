@@ -62,7 +62,7 @@ python3 execute/execute_diffuseimage.py -device [device]
 ```
 ### Elasticity / Soft Body
 ```
-python3 execute/execute_online.py -device [device]
+python3 execute/execute_elasticity.py -device [device]
 ```
 ### Advection
 ```
