@@ -44,6 +44,10 @@ In summary, our only dependecies are [PyTorch](https://pytorch.org), [h5py](http
 ## Latent Space Dynamics
 With everything above installed, we are ready to run the actual code :) Below we provide examples that solve PDEs by traversing in the latent space (Section 4 of the paper).
 
+<p align="center">
+<img src="teaser/teaser.png"  width="640"/>
+</p>
+
 ### Theromodynamics
 ```
 python3 execute/execute_diffusion.py -device [device]
