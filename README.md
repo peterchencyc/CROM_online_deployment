@@ -13,8 +13,8 @@
 This repository is part II of the official implementation of the paper:
 
 > **[CROM: Continuous Reduced-Order Modeling of PDEs Using Implicit Neural Representations](https://arxiv.org/abs/2206.02607)**  
-> [Peter Yichen Chen](https://peterchencyc.com), [Jinxu Xiang](https://www.linkedin.com/in/jinxu-xiang-0862631a2), [Dong Heon Cho](https://www.linkedin.com/in/david-cho-003285131), G A Pershing, [Henrique Teles Maia](https://henriquetmaia.github.io), [Maurizio Chiaramonte](https://www.linkedin.com/in/maurizio-chiaramonte-03779762), [Kevin Carlberg](https://kevintcarlberg.net), [Eitan Grinspun](https://www.dgp.toronto.edu/~eitan/)  
-> Columbia University, Meta Reality Labs Research, University of Toronto  
+> [Peter Yichen Chen](https://peterchencyc.com), [Jinxu Xiang](https://www.linkedin.com/in/jinxu-xiang-0862631a2), [Dong Heon Cho](https://www.linkedin.com/in/david-cho-003285131), [Yue Chang](https://changy1506.github.io), [Dong Heon Cho](https://www.linkedin.com/in/david-cho-003285131), G A Pershing, [Henrique Teles Maia](https://henriquetmaia.github.io), [Maurizio M. Chiaramonte](https://www.linkedin.com/in/maurizio-chiaramonte-03779762), [Kevin Carlberg](https://kevintcarlberg.net), [Eitan Grinspun](https://www.dgp.toronto.edu/~eitan/)  
+> Columbia University, Meta Reality Labs Research, MIT CSAIL, University of Toronto  
 
 Part II focuses on Section 4 of the paper, Latent Space Dynamics
 
@@ -47,37 +47,34 @@ pip install torch==1.11.0+cu113 -f https://download.pytorch.org/whl/cu113/torch_
 pip install -r requirements.txt
 ```
 
-In summary, our only dependecies are [PyTorch](https://pytorch.org) and [h5py](https://www.h5py.org).
+In summary, our only dependecies are [PyTorch](https://pytorch.org), [h5py](https://www.h5py.org) and some common used drawing packages.
 
 ## Latent Space Dynamics
 With everything above installed, we are ready to run the actual code :) Below we provide three examples that solve PDEs by traversing in the latent space (Section 4 of the paper).
 
 ### Theromodynamics
 ```
-python3 online/execute_diffusion.py -device [device]
+python3 execute/execute_diffusion.py -device [device]
 ```
 ### Image Smoothing
 ```
-python3 online/execute_diffuseimage.py -device [device]
+python3 execute/execute_diffuseimage.py -device [device]
 ```
 ### Elasticity / Soft Body
 ```
-python3 online/execute_online.py -device [device]
+python3 execute/execute_online.py -device [device]
 ```
-
 ### Advection
 ```
-python3 online/execute_advection.py -device [device]
+python3 execute/execute_advection.py -device [device]
 ```
-
 ### Burgers' Equation
 ```
-python3 online/execute_burger.py -device [device]
+python3 execute/execute_burger.py -device [device]
 ```
-
 ### Karman vortex street
 ```
-python3 online/execute_karman.py
+python3 execute/execute_karman.py
 ```
 
 [device] is either cpu or cuda. Depending on the choice of [device], our code can be executed either on cpu or gpu. For the elasticity example, executing on cuda significantly accelerates the simulation.
@@ -97,11 +94,11 @@ Below we provide two examples of computing spatial samples via this greedy heuri
 
 ### Theromodynamics
 ```
-python3 optimal_sampling/execute_diffusion.py -device [device]
+python3 execute/execute_optim_diffusion.py -device [device]
 ```
 ### Image Smoothing
 ```
-python3 optimal_sampling/execute_diffuseimage.py -device [device]
+python3 execute/execute_optim_diffuseimage.py -device [device]
 ```
 We recommend using "CUDA" for device for better performances. Optimal sampling typically takes hours to run.
 
@@ -118,11 +115,13 @@ The code is organized as follows:
 ## Citation
 If this library helped you in a publication, please cite our paper so others can find our code and benefit as well.
 ```
-@article{chen2022crom,
-  title={{CROM}: Continuous Reduced-Order Modeling of {PDE}s Using Implicit Neural Representations},
-  author={Chen, Peter Yichen and Xiang, Jinxu and Cho, Dong Heon and Pershing, GA and Maia, Henrique Teles and Chiaramonte, Maurizio and Carlberg, Kevin and Grinspun, Eitan},
-  journal={arXiv preprint arXiv:2206.02607},
-  year={2022}
+@inproceedings{
+chen2023crom,
+title={{CROM}: Continuous Reduced-Order Modeling of {PDE}s Using Implicit Neural Representations},
+author={Peter Yichen Chen and Jinxu Xiang and Dong Heon Cho and Yue Chang and G A Pershing and Henrique Teles Maia and Maurizio M Chiaramonte and Kevin Thomas Carlberg and Eitan Grinspun},
+booktitle={The Eleventh International Conference on Learning Representations },
+year={2023},
+url={https://openreview.net/forum?id=FUORz1tG8Og}
 }
 ```
 
