@@ -2,14 +2,14 @@ import os
 import argparse
 
 
-folderu = r"weights\Karman_Fulid\vel_u"
-folderv = r"weights\Karman_Fulid\vel_v"
+folderu = "weights/Karman_Fulid/vel_u"
+folderv = "weights/Karman_Fulid/vel_v"
 
 nameu = "epoch=5999-step=5999"
 namev = "epoch=5999-step=5999"
 
-datau = r"data\Karman_Fulid\vel_u\h5_f_0000000000.h5"
-datav = r"data\Karman_Fulid\vel_v\h5_f_0000000000.h5"
+datau = "data/Karman_Fulid/vel_u/h5_f_0000000000.h5"
+datav = "data/Karman_Fulid/vel_v/h5_f_0000000000.h5"
 
 resolution = 200
 total_steps = 1000

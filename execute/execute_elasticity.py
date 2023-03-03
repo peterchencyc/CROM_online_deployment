@@ -2,8 +2,8 @@ import os
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-device',
-                    type=str, required=True)
+parser.add_argument('-device', default='cuda',
+                    type=str)
 args = parser.parse_args()
 
 device = args.device

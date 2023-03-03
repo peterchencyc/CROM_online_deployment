@@ -113,17 +113,6 @@ num_sample_bdry = -1 if not args.num_sample_bdry else args.num_sample_bdry[0]
 write_every = 1 if not args.we else args.we[0]
 num_cpu_thread = None if not args.num_cpu_thread else args.num_cpu_thread[0]
 
-if exp == 'diffusion':
-    sample_str = 'sample_{num}'.format(num = num_sample_interior)
-elif exp == 'diffuse_image':
-    sample_str = 'sample_{num}'.format(num = num_sample_interior)
-elif exp == 'elasticity_fem':
-    sample_str = 'sample-interior_{interior}_bdry_{bdry}'.format(interior = num_sample_interior, bdry = num_sample_bdry)
-elif exp == 'advection':
-    sample_str = 'full'
-elif exp == 'burger':
-    sample_str = 'full'
-
 output = os.path.join(output,os.path.basename(os.path.dirname(md)),"h5_f_{:010d}.h5")
 
 if exp == 'diffusion':
@@ -167,10 +156,10 @@ q0_gt = q0_gt.view(-1, q0_gt.size(2))
 
 sample_point = SamplePoint(problem)
 if exp == 'elasticity_fem':
-    sample_style = 'random'
+    init_sample_style = 'random'
 else:
-    sample_style = 'full'
-sample_point.initialize(sample_style, -1, -1, decoder, xhat, torch.zeros_like(xhat))
+    init_sample_style = 'full'
+sample_point.initialize(init_sample_style, -1, -1, decoder, xhat, torch.zeros_like(xhat))
 
 xhat = nonlinear_solver.solve(xhat, q0_gt, sample_point, 1, 20) # effectively serves as warm start for the rest of the gpu operations
 print('initial xhat: ', xhat)
