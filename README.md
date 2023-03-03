@@ -1,28 +1,20 @@
 # CROM: Continuous Reduced-Order Modeling of PDEs Using Implicit Neural Representations (Part II - Latent Space Dynamics)
 
 <p align="center">
-<img src="teaser/1d-trim.gif"  width="640"/>
-</p>
-<p align="center">
-<img src="teaser/img-smoothing.gif"  width="640"/>
-</p>
-<p align="center">
-<img src="teaser/piggy-sphere.gif"  width="640"/>
+<img src="teaser/dynamics.png"  width="640"/>
 </p>
 
 This repository is part II of the official implementation of the paper:
 
 > **[CROM: Continuous Reduced-Order Modeling of PDEs Using Implicit Neural Representations](https://arxiv.org/abs/2206.02607)**  
 > [Peter Yichen Chen](https://peterchencyc.com), [Jinxu Xiang](https://www.linkedin.com/in/jinxu-xiang-0862631a2), [Dong Heon Cho](https://www.linkedin.com/in/david-cho-003285131), [Yue Chang](https://changy1506.github.io), [Dong Heon Cho](https://www.linkedin.com/in/david-cho-003285131), G A Pershing, [Henrique Teles Maia](https://henriquetmaia.github.io), [Maurizio M. Chiaramonte](https://www.linkedin.com/in/maurizio-chiaramonte-03779762), [Kevin Carlberg](https://kevintcarlberg.net), [Eitan Grinspun](https://www.dgp.toronto.edu/~eitan/)  
-> Columbia University, Meta Reality Labs Research, MIT CSAIL, University of Toronto  
+> Columbia University, Meta Reality Labs Research, MIT CSAIL, University of Toronto
 
-Part II focuses on Section 4 of the paper, Latent Space Dynamics
+See the project page for more details (including videos): https://crom-pde.github.io
 
-We assume knowledge of Part I of the implementation, where the user already trains a low-dimensinal manifold from the training data (Section 3 of the paper, Manifold Construction). Part II solves PDEs by rapidly traversing in the latent space.
+Part II focuses on Section 4 of the paper, Latent Space Dynamics. We assume knowledge of [Part I](https://github.com/dc3042/CROM_offline_training) of the implementation, where the user already trains a low-dimensinal manifold from the training data (Section 3 of the paper, Manifold Construction). Part II solves PDEs by rapidly traversing in the latent space.
 
-We provide three pre-trained models (built with Part I). We then conduct latent space dynamics on PDEs from theromdynamics, image processing, and elasticity / soft body.
-
-> TODO: link to Part I
+We provide several pre-trained models (built with [Part I](https://github.com/dc3042/CROM_offline_training)). We then conduct latent space dynamics on examples from theromdynamics, image processing, and elasticity / soft body, advection, Burger's equations, the Navier-Stokes equations (Karman vortex street).
 
 ## Get Started
 
@@ -50,7 +42,7 @@ pip install -r requirements.txt
 In summary, our only dependecies are [PyTorch](https://pytorch.org), [h5py](https://www.h5py.org) and some common used drawing packages.
 
 ## Latent Space Dynamics
-With everything above installed, we are ready to run the actual code :) Below we provide three examples that solve PDEs by traversing in the latent space (Section 4 of the paper).
+With everything above installed, we are ready to run the actual code :) Below we provide examples that solve PDEs by traversing in the latent space (Section 4 of the paper).
 
 ### Theromodynamics
 ```
@@ -72,7 +64,7 @@ python3 execute/execute_advection.py -device [device]
 ```
 python3 execute/execute_burger.py -device [device]
 ```
-### Karman vortex street
+### The Navier-Stokes equations (Karman vortex street)
 ```
 python3 execute/execute_karman.py
 ```
@@ -81,7 +73,7 @@ python3 execute/execute_karman.py
 
 Computed results are stored in the output directory.
 
-## Optimal Sampling
+## Robust Sampling
 As discussed in Section 4.4 of the paper, our method achieves maximum speedup by using very few spatial samples (compared to the ground truth training data). One way to choose these samples is via the greedy heuristics discussed in the paper. 
 
 <p align="center">
@@ -100,17 +92,17 @@ python3 execute/execute_optim_diffusion.py -device [device]
 ```
 python3 execute/execute_optim_diffuseimage.py -device [device]
 ```
-We recommend using "CUDA" for device for better performances. Optimal sampling typically takes hours to run.
+We recommend using "CUDA" for device for better performances. Robust sampling typically takes hours to run.
 
 Alternatively, spatial samples can be also be chosen via the stochastic sampling approach, as it is done in the elasticity example.
 
 ## High-Level structure
 The code is organized as follows:
 * *common* contains utility functions
-* *data* contains necessary precomputed data for latent space dynamics. They are NOT training data.
-* *online* contains the real meat of the latent space dynamics that use very few spatial samples
-* *optimal_sampling* contains all the code related to optimal sampling
-* *weights* pre-trained model produced by Part I
+* *data* contains necessary precomputed data for latent space dynamics and training data for robust sampling. 
+* *online* contains the real meat of the latent space dynamics that use very few spatial samples. In addition, It also contains optimal sampling codes related to robust sampling (even though optimal sampling is technically an offline process).
+* *execute* is a wrapper of everything in *online*.
+* *weights* pre-trained model produced by [Part I](https://github.com/dc3042/CROM_offline_training)
 
 ## Citation
 If this library helped you in a publication, please cite our paper so others can find our code and benefit as well.
